@@ -42,6 +42,12 @@ def read_items() -> Dict[str, Any]:
     items = get_all_items()
     return format_response(items)
 
+@app.get("/divide/")
+def divide_numbers(numerator: float, denominator: float) -> Dict[str, Any]:
+    """Divides numerator by denominator. (Vulnerable to division by zero)"""
+    result = numerator / denominator
+    return format_response({"result": result})
+
 def main() -> None:
     print("Booting up backend server...")
     # Initialize DB synchronously for standalone CLI runs
