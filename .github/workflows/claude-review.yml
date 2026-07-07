@@ -1,0 +1,60 @@
+name: Claude PR Review - Direct API Method
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    paths:
+      - "src/**/*.py"
+      - "utils/**/*.py"
+      - "tests/**/*.py"
+
+jobs:
+  claude-review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Claude Review & Post comments
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          # 1. Generate Git Diff
+          git diff origin/${{ github.event.pull_request.base.ref }}...HEAD > pr.diff
+
+          # 2. Define the schema matching GitHub Reviews API payload
+          SCHEMA='{"type":"object","properties":{"event":{"type":"string","enum":["COMMENT"]},"body":{"type":"string"},"comments":{"type":"array","items":{"type":"object","properties":{"path":{"type":"string"},"line":{"type":"integer"},"body":{"type":"string"},"side":{"type":"string","enum":["RIGHT"]}},"required":["path","line","body","side"]}}},"required":["event","body","comments"]}'
+
+          # 3. Define the prompt
+          PROMPT="You are a senior developer and security auditor. Review the following git diff for bugs, type safety, performance, and security issues.
+          
+          === GIT DIFF ===
+          $(cat pr.diff)
+          ================
+          
+          For each issue found, add a comment to the 'comments' array with:
+          - 'path': relative file path
+          - 'line': line number in the diff (new code)
+          - 'side': 'RIGHT'
+          - 'body': Format it exactly like this:
+            **Problem:** <description of the issue>
+            **Suggested Solution:** <detailed suggestion and code snippet>
+          
+          If no issues are found, set the root 'body' to 'Claude Review: No issues found! Code looks clean.' and keep the 'comments' array empty.
+          Otherwise, set the root 'body' to 'Claude Code Review Feedback'.
+          
+          Only comment on files and lines present in the diff."
+
+          # 4. Invoke Claude CLI
+          RESPONSE=$(npx -y @anthropic-ai/claude-code -p "$PROMPT" --output-format json --json-schema "$SCHEMA")
+
+          # 5. Post to GitHub API using gh CLI
+          CLEAN_JSON=$(echo "$RESPONSE" | jq -c '.')
+          
+          echo "$CLEAN_JSON" | gh api repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews --input -
