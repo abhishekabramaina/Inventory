@@ -3,7 +3,7 @@ import uvicorn
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from src.database import initialize_db, create_item, get_all_items
+from src.database import initialize_db, create_item, get_all_items, get_item_by_name
 from utils.helpers import sanitize_input, format_response
 from typing import Dict, Any, List, AsyncGenerator
 
@@ -47,6 +47,12 @@ def divide_numbers(numerator: float, denominator: float) -> Dict[str, Any]:
     """Divides numerator by denominator. (Vulnerable to division by zero)"""
     result = numerator / denominator
     return format_response({"result": result})
+
+@app.get("/items/search/")
+def search_items(name: str) -> Dict[str, Any]:
+    """Search items by name."""
+    items = get_item_by_name(name)
+    return format_response(items)
 
 def main() -> None:
     print("Booting up backend server...")
