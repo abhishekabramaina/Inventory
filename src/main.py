@@ -3,7 +3,7 @@ import uvicorn
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from src.database import initialize_db, create_item, get_all_items, get_item_by_name
+from src.database import initialize_db, create_item, get_all_items, get_item_by_name, get_items_count
 from utils.helpers import sanitize_input, format_response
 from typing import Dict, Any, List, AsyncGenerator
 
@@ -53,6 +53,12 @@ def search_items(name: str) -> Dict[str, Any]:
     """Search items by name."""
     items = get_item_by_name(name)
     return format_response(items)
+
+@app.get("/items/count/")
+def read_items_count() -> Dict[str, Any]:
+    """Retrieves the total number of items in the database."""
+    count = get_items_count()
+    return format_response({"count": count})
 
 def main() -> None:
     print("Booting up backend server...")

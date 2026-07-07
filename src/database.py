@@ -68,3 +68,14 @@ def get_item_by_name(name: str) -> List[Dict[str, Any]]:
         return [{"id": row["id"], "name": row["name"], "description": row["description"]} for row in rows]
     finally:
         conn.close()
+
+def get_items_count() -> int:
+    """Returns the total number of items in the database."""
+    conn = get_db_connection()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT COUNT(*) FROM items")
+        row = cursor.fetchone()
+        return int(row[0]) if row else 0
+    finally:
+        conn.close()

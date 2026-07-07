@@ -106,3 +106,23 @@ class TestFastAPIApp:
         result = format_error("Something went wrong")
         assert result == {"status": "error", "message": "Something went wrong"}
 
+    def test_retrieves_correct_item_count_when_items_exist(self, item_factory: Any) -> None:
+        """Verifies that the items count endpoint returns the correct total count of items."""
+        client = TestClient(app)
+        
+        # Initially count should be 0
+        response = client.get("/items/count/")
+        assert response.status_code == 200
+        assert response.json()["data"]["count"] == 0
+        
+        # Add 3 items
+        client.post("/items/", json=item_factory(name="Item 1"))
+        client.post("/items/", json=item_factory(name="Item 2"))
+        client.post("/items/", json=item_factory(name="Item 3"))
+        
+        # Count should now be 3
+        response = client.get("/items/count/")
+        assert response.status_code == 200
+        assert response.json()["data"]["count"] == 3
+
+
