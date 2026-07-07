@@ -45,7 +45,7 @@ class TestFastAPIApp:
         client = TestClient(app)
         response = client.get("/")
         assert response.status_code == 200
-        assert response.json() == {"status": "ok", "message": "Welcome to the FastAPI Practice App!"}
+        assert response.json() == {"status": "ok", "message": "Welcome to the FastInventory!"}
 
     def test_creates_item_when_valid_payload_provided(self, item_factory: Any) -> None:
         """Verifies that items can be created with valid name and description."""
