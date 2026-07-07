@@ -13,7 +13,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     initialize_db()
     yield
 
-app = FastAPI(title="CCAF Sample FastAPI Practice App", lifespan=lifespan)
+app = FastAPI(title="FastInventory", lifespan=lifespan)
 
 class ItemCreate(BaseModel):
     name: str
@@ -22,7 +22,7 @@ class ItemCreate(BaseModel):
 @app.get("/")
 def read_root() -> Dict[str, str]:
     """Health check endpoint."""
-    return {"status": "ok", "message": "Welcome to the FastAPI Practice App!"}
+    return {"status": "ok", "message": "Welcome to the FastInventory!"}
 
 @app.post("/items/")
 def add_item(item: ItemCreate) -> Dict[str, Any]:
@@ -41,12 +41,6 @@ def read_items() -> Dict[str, Any]:
     """Retrieves all items from the database."""
     items = get_all_items()
     return format_response(items)
-
-@app.get("/divide/")
-def divide_numbers(numerator: float, denominator: float) -> Dict[str, Any]:
-    """Divides numerator by denominator. (Vulnerable to division by zero)"""
-    result = numerator / denominator
-    return format_response({"result": result})
 
 @app.get("/items/search/")
 def search_items(name: str) -> Dict[str, Any]:

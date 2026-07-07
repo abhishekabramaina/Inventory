@@ -1,4 +1,4 @@
-# CCAF Inventory & Asset Tracking Service
+# FastInventory: Inventory & Asset Tracking Service
 
 [![CI Pipeline](https://github.com/abhishekabramaina/Inventory/actions/workflows/ci.yml/badge.svg)](https://github.com/abhishekabramaina/Inventory/actions)
 [![Claude PR Review](https://github.com/abhishekabramaina/Inventory/actions/workflows/claude-review.yml/badge.svg)](https://github.com/abhishekabramaina/Inventory/actions)
