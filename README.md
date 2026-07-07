@@ -4,7 +4,9 @@
 [![Claude PR Review](https://github.com/abhishekabramaina/Inventory/actions/workflows/claude-review.yml/badge.svg)](https://github.com/abhishekabramaina/Inventory/actions)
 
 High-performance, production-grade FastAPI microservice designed for asset ingest, product tracking, and stock level inventory management. Built on the CCAF architectural framework, this service enforces strict design standards, complete type safety, and robust isolated integration testing.
+
 A Handson for CI-CD with Claude.
+
 ---
 
 ## 1. Architectural Highlights & Design Patterns
