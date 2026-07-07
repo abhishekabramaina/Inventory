@@ -99,3 +99,10 @@ class TestFastAPIApp:
         assert len(data["data"]) == 2
         assert data["data"][0]["name"] == "First Item"
         assert data["data"][1]["name"] == "Second Item"
+
+    def test_format_error_returns_standardized_dict(self) -> None:
+        """Verifies that format_error utility function returns a standardized dictionary."""
+        from utils.helpers import format_error
+        result = format_error("Something went wrong")
+        assert result == {"status": "error", "message": "Something went wrong"}
+
