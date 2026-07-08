@@ -1,6 +1,7 @@
 ---
 name: verify-coverage
 description: Run the project's test suite in an isolated subprocess and report the result. Use when asked to run tests, verify test coverage, or check that the test suite passes.
+context: fork
 ---
 
 # verify-coverage

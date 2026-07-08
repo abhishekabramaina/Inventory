@@ -5,6 +5,7 @@ argument-hint: "[pr-number]"
 arguments: [pr_number]
 disable-model-invocation: true
 allowed-tools: Read Grep Bash(git diff *)
+context: fork
 ---
 
 ## Lint PR #$pr_number

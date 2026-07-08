@@ -3,6 +3,7 @@ name: check-types
 description: Run strict static type checking on the codebase and auto-fix untyped functions.
 user-invocable: true
 disable-model-invocation: false
+context: fork
 ---
 
 # Check Types Skill
