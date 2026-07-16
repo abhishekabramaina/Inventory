@@ -42,6 +42,11 @@ def read_items() -> Dict[str, Any]:
     items = get_all_items()
     return format_response(items)
 
+@app.get("/item-desc/")
+def read_items_desc() -> Dict[str, Any]:
+    """Retrieves all items from the database."""
+    return "Description......"
+
 @app.get("/items/search/")
 def search_items(name: str) -> Dict[str, Any]:
     """Search items by name."""
